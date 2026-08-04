@@ -19,4 +19,7 @@ export const logout = () =>
 
 export const getCurrentUser = () => request('/auth/me');
 
+export const verifyEmail = (token) =>
+  request(`/auth/verify-email?token=${encodeURIComponent(token)}`);
+
 export const googleLoginUrl = `${API_URL}/auth/google`;

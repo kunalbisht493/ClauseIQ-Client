@@ -3,6 +3,7 @@ import PrivateRoute from './components/common/PrivateRoute';
 import Layout from './components/common/Layout';
 import LoginPage from './pages/LoginPage';
 import AuthCallbackPage from './pages/AuthCallbackPage';
+import VerifyEmailPage from './pages/VerifyEmailPage';
 import DashboardPage from './pages/DashboardPage';
 import HistoryPage from './pages/HistoryPage';
 import AnalysisPage from './pages/AnalysisPage';
@@ -12,6 +13,7 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/auth/callback" element={<AuthCallbackPage />} />
+      <Route path="/verify-email" element={<VerifyEmailPage />} />
       <Route element={<PrivateRoute />}>
         <Route element={<Layout />}>
           <Route path="/" element={<DashboardPage />} />
