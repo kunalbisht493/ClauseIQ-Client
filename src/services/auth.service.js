@@ -1,4 +1,4 @@
-import { request } from './api';
+import { request, API_URL } from './api';
 
 export const login = (v) =>
   request('/auth/login', {
@@ -17,8 +17,6 @@ export const logout = () =>
     method: 'POST',
   });
 
-export const googleLogin = (credential) =>
-  request('/auth/google', {
-    method: 'POST',
-    body: JSON.stringify({ credential }),
-  });
+export const getCurrentUser = () => request('/auth/me');
+
+export const googleLoginUrl = `${API_URL}/auth/google`;

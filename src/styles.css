@@ -91,6 +91,15 @@ header {
   align-items:start;
   margin-bottom:32px;
 }
+header>div {
+  min-width:0;
+}
+.header-actions {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-shrink:0;
+}
 h1,h2,h3,p {
   margin-top:0;
 }
@@ -98,6 +107,8 @@ h1 {
   font:700 clamp(31px,4vw,48px)/1.1 'Playfair Display',serif;
   color:#193940;
   margin-bottom:10px;
+  overflow-wrap:break-word;
+  word-break:break-word;
 }
 h2 {
   font:700 22px 'Playfair Display',serif;
@@ -199,8 +210,8 @@ header p {
 .doc {
   padding:16px 18px;
   display:grid;
-  grid-template-columns:1fr auto;
-  gap:5px;
+  grid-template-columns:1fr auto auto;
+  column-gap:10px;
   align-items:center;
   transition:.15s;
 }
@@ -213,7 +224,7 @@ header p {
 }
 .doc em {
   grid-column:2;
-  grid-row:1/3;
+  justify-self:end;
   text-transform:capitalize;
   font-style:normal;
   font-size:12px;
@@ -230,6 +241,28 @@ header p {
 .doc em.failed {
   background:#fde8e5;
   color:#ae4130;
+}
+.doc-delete {
+  grid-column:3;
+  justify-self:end;
+  border:1px solid #e3ebe7;
+  border-radius:6px;
+  padding:5px 12px;
+  background:transparent;
+  color:#8b9793;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.doc-delete:hover {
+  border-color:#f0b8b0;
+  background:#fdecea;
+  color:#c0392b;
+}
+.doc-delete:disabled {
+  opacity:.5;
+  cursor:default;
 }
 .history {
   max-width:850px;
@@ -392,10 +425,23 @@ header p {
 .authcard>p:last-child {
   color:#6d7a77;
 }
-.google-auth {
-  margin:22px 0 0;
+.google-btn {
   display:flex;
+  align-items:center;
   justify-content:center;
+  gap:10px;
+  width:100%;
+  border:1px solid #cbdad5;
+  border-radius:8px;
+  padding:11px 15px;
+  font-weight:600;
+  color:#2b3a37;
+  background:#fff;
+  margin-top:22px;
+}
+.google-btn:hover {
+  border-color:#a6cec6;
+  background:#f7faf9;
 }
 .divider {
   display:flex;

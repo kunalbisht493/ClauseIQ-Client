@@ -18,3 +18,8 @@ export const askQuestion = (id, question) =>
     method: 'POST',
     body: JSON.stringify({ question }),
   });
+
+export const deleteDocument = (id) =>
+  request(`/documents/${id}`, {
+    method: 'DELETE',
+  });

@@ -1,8 +1,13 @@
-export default function RiskBadge({ score = 0 }) {
+export default function RiskBadge({ score = 0, level }) {
   const tone = score >= 70 ? 'high' : score >= 35 ? 'medium' : 'low';
 
-  const label =
-    score >= 70 ? 'High risk' : score >= 35 ? 'Review needed' : 'Low risk';
+  const label = level
+    ? `${level} risk`
+    : score >= 70
+    ? 'High risk'
+    : score >= 35
+    ? 'Review needed'
+    : 'Low risk';
 
   return (
     <span className={`risk ${tone}`}>

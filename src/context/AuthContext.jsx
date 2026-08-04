@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import * as auth from '../services/auth.service';
 
 const C = createContext();
@@ -7,34 +7,51 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(
     () => JSON.parse(sessionStorage.getItem('clauseiq-user') || 'null')
   );
+  const [checkingSession, setCheckingSession] = useState(true);
+
+  const persistUser = (u) => {
+    setUser(u);
+    sessionStorage.setItem('clauseiq-user', JSON.stringify(u));
+  };
+
+  const clearUser = () => {
+    setUser(null);
+    sessionStorage.removeItem('clauseiq-user');
+  };
+
+  useEffect(() => {
+    auth
+      .getCurrentUser()
+      .then((r) => persistUser(r.user))
+      .catch(() => clearUser())
+      .finally(() => setCheckingSession(false));
+  }, []);
 
   const signIn = async (v) => {
     const r = await auth.login(v);
-    setUser(r.user);
-    sessionStorage.setItem('clauseiq-user', JSON.stringify(r.user));
+    persistUser(r.user);
     return r;
   };
 
-  const signInWithGoogle = async (credential) => {
-    const r = await auth.googleLogin(credential);
-    setUser(r.user);
-    sessionStorage.setItem('clauseiq-user', JSON.stringify(r.user));
+  const loadCurrentUser = async () => {
+    const r = await auth.getCurrentUser();
+    persistUser(r.user);
     return r;
   };
 
   const signOut = async () => {
     await auth.logout();
-    setUser(null);
-    sessionStorage.removeItem('clauseiq-user');
+    clearUser();
   };
 
   return (
     <C.Provider
       value={{
         user,
+        checkingSession,
         signIn,
-        signInWithGoogle,
         signOut,
+        loadCurrentUser,
         register: auth.register,
       }}
     >

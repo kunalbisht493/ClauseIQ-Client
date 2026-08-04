@@ -49,7 +49,14 @@ export default function AnalysisPage() {
             {document.status}
           </p>
         </div>
-        {analysis && <RiskBadge score={analysis.riskScore} />}
+        <div className="header-actions">
+          {analysis && (
+            <RiskBadge score={analysis.riskScore} level={analysis.riskLevel} />
+          )}
+          <Link className="secondary" to="/">
+            Upload another
+          </Link>
+        </div>
       </header>
 
       {error && <p className="alert error">{error}</p>}
@@ -80,6 +87,12 @@ export default function AnalysisPage() {
                         {r.level || 'Review'} · {r.score || 0}/100
                       </b>
                       <p>{r.reason}</p>
+                      {r.recommendation && (
+                        <p className="recommendation">
+                          <b>Recommendation: </b>
+                          {r.recommendation}
+                        </p>
+                      )}
                     </div>
                     <blockquote>{r.clause}</blockquote>
                   </article>
