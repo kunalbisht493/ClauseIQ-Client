@@ -100,6 +100,98 @@ header>div {
   gap:12px;
   flex-shrink:0;
 }
+.profile-row {
+  display:flex;
+  align-items:start;
+  justify-content:space-between;
+  gap:10px;
+}
+.profile-info {
+  display:grid;
+  gap:2px;
+  min-width:0;
+}
+.settings-icon {
+  display:grid;
+  place-items:center;
+  width:30px;
+  height:30px;
+  border-radius:8px;
+  color:#71807c;
+  flex-shrink:0;
+}
+.settings-icon:hover {
+  background:#eef3f1;
+  color:#177065;
+}
+.settings-icon.active {
+  background:#e0f3ee;
+  color:#0b7065;
+}
+.danger-zone {
+  border-color:#f3d9d4;
+}
+.danger-zone p.muted {
+  margin-bottom:16px;
+}
+.danger {
+  border:0;
+  border-radius:8px;
+  padding:12px 18px;
+  background:#c0392b;
+  color:#fff;
+  font-weight:700;
+}
+.danger:disabled {
+  opacity:.6;
+}
+.danger-actions {
+  display:flex;
+  gap:10px;
+  margin-top:16px;
+}
+.settings-list {
+  display:grid;
+  gap:10px;
+  max-width:480px;
+}
+.settings-option {
+  background:#fff;
+  border:1px solid #e3ebe7;
+  border-radius:12px;
+  padding:18px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  width:100%;
+  text-align:left;
+  color:inherit;
+  transition:.15s;
+}
+.settings-option:hover {
+  border-color:#76aea4;
+  transform:translateY(-1px);
+}
+.settings-option b {
+  display:block;
+  margin-bottom:3px;
+}
+.settings-option small {
+  color:#75827f;
+}
+.settings-option svg {
+  color:#a3b0ad;
+  flex-shrink:0;
+}
+.settings-option.danger b {
+  color:#aa392e;
+}
+.settings-back {
+  display:inline-block;
+  margin-bottom:16px;
+  font-size:13px;
+}
 h1,h2,h3,p {
   margin-top:0;
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { googleLoginUrl } from '../services/auth.service';
@@ -12,6 +12,13 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (sessionStorage.getItem('clauseiq-session-expired')) {
+      sessionStorage.removeItem('clauseiq-session-expired');
+      setNotice('Your session has expired. Please log in again.');
+    }
+  }, []);
 
   if (checkingSession) return null;
   if (user) return <Navigate to="/" replace />;

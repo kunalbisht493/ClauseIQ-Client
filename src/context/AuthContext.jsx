@@ -27,6 +27,25 @@ export function AuthProvider({ children }) {
       .finally(() => setCheckingSession(false));
   }, []);
 
+  useEffect(() => {
+    function handleUnauthorized(event) {
+      const path = event.detail?.path || '';
+      const wasLoggedIn = Boolean(sessionStorage.getItem('clauseiq-user'));
+
+      clearUser();
+
+      // Only flag as an "expired session" if it happened on a real
+      // authenticated call, not on a fresh guest's /auth/me check or a
+      // failed login attempt (both expected to 401 in normal use).
+      if (wasLoggedIn && path !== '/auth/login' && path !== '/auth/me') {
+        sessionStorage.setItem('clauseiq-session-expired', '1');
+      }
+    }
+
+    window.addEventListener('auth:unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
+  }, []);
+
   const signIn = async (v) => {
     const r = await auth.login(v);
     persistUser(r.user);

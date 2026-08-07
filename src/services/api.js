@@ -12,6 +12,10 @@ export async function request(path, options = {}) {
     },
   });
 
+  if (res.status === 401) {
+    window.dispatchEvent(new CustomEvent('auth:unauthorized', { detail: { path } }));
+  }
+
   const data = res.status === 204 ? null : await res.json().catch(() => ({}));
 
   if (!res.ok) throw new Error(data.message || 'Request failed.');
