@@ -15,7 +15,7 @@ export default function ChatBox({ onAsk, loading }) {
       <input
         value={question}
         onChange={(event) => setQuestion(event.target.value)}
-        placeholder="Ask about this agreement…"
+        placeholder="e.g. What's the late-payment interest rate?"
       />
       <button className="primary" disabled={loading}>
         {loading ? 'Thinking…' : 'Ask'}

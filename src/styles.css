@@ -437,6 +437,12 @@ header p {
   color:#7d6c60;
   font-style:italic;
 }
+.ask-about {
+  display:inline-block;
+  margin-top:10px;
+  font-size:13px;
+  font-weight:700;
+}
 .answer {
   background:#f5f8f7;
   border-radius:8px;

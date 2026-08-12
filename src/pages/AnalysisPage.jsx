@@ -84,7 +84,7 @@ export default function AnalysisPage() {
                   <article key={i}>
                     <div>
                       <b>
-                        {r.level || 'Review'} · {r.score || 0}/100
+                        {i + 1}. {r.level || 'Review'} · {r.score || 0}/100
                       </b>
                       <p>{r.reason}</p>
                       {r.recommendation && (
@@ -93,6 +93,16 @@ export default function AnalysisPage() {
                           {r.recommendation}
                         </p>
                       )}
+                      <button
+                        type="button"
+                        className="link ask-about"
+                        disabled={loading}
+                        onClick={() =>
+                          ask(`Explain this clause in more detail and its practical impact: "${r.clause}"`)
+                        }
+                      >
+                        Ask about this →
+                      </button>
                     </div>
                     <blockquote>{r.clause}</blockquote>
                   </article>
