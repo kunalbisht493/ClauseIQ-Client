@@ -50,9 +50,9 @@ export default function ForgotPasswordPage() {
 
         {message && (
           <div className="alert success">
-            <p style={{ margin: 0 }}>{message}</p>
-            <p style={{ margin: '8px 0 0', fontSize: '13px' }}>
-              Please check your spam/junk folder if you don't see it within a few minutes.
+            <p style={{ margin: 0, fontWeight: 600 }}>{message}</p>
+            <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#165b53' }}>
+              Check Spam folder if not in inbox.
             </p>
           </div>
         )}

@@ -169,7 +169,16 @@ export default function SettingsPage() {
             )}
 
             {pwError && <p className="alert error">{pwError}</p>}
-            {pwNotice && <p className="alert success">{pwNotice}</p>}
+            {pwNotice && (
+              <div className="alert success">
+                <p style={{ margin: 0, fontWeight: 600 }}>{pwNotice}</p>
+                {pwNotice.toLowerCase().includes('sent') && (
+                  <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#165b53' }}>
+                    Check Spam folder if not in inbox.
+                  </p>
+                )}
+              </div>
+            )}
 
             <form onSubmit={submitPassword} style={{ display: 'grid', gap: '16px', maxWidth: '440px' }}>
               {hasPassword && (

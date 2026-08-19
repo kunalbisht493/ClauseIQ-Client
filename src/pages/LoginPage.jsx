@@ -110,7 +110,10 @@ export default function LoginPage() {
         )}
         {notice && (
           <div className="alert success">
-            <p style={{ margin: 0 }}>{notice}</p>
+            <p style={{ margin: 0, fontWeight: 600 }}>{notice}</p>
+            <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#165b53' }}>
+              Check Spam folder if not in inbox.
+            </p>
             {form.email && (
               <div className="resend-box" style={{ marginTop: 8 }}>
                 <button
