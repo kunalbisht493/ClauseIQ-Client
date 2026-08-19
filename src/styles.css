@@ -116,8 +116,8 @@ h1 {
   line-height: 1.15;
   color: var(--color-text-main);
   margin-bottom: 10px;
-  overflow-wrap: break-word;
-  word-break: break-word;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 
 h2 {
@@ -483,8 +483,9 @@ h3 {
   box-sizing: border-box;
 }
 
-/* Page Header Structure */
-header {
+/* Page Header Structure (Excludes Topbar) */
+header:not(.mobile-header),
+.shell-content header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -494,12 +495,14 @@ header {
   box-sizing: border-box;
 }
 
-header > div {
+header:not(.mobile-header) > div,
+.shell-content header > div {
   min-width: 0;
   flex: 1 1 auto;
 }
 
-header p {
+header:not(.mobile-header) p,
+.shell-content header p {
   color: #6e7d7a;
   font-size: clamp(14px, 2vw, 16px);
   line-height: 1.5;
@@ -1541,7 +1544,8 @@ header p {
     border-bottom: 1px solid var(--color-border);
     padding: 0 16px;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 12px;
     z-index: 100;
     box-shadow: 0 1px 4px rgba(14, 76, 75, 0.04);
     margin-bottom: 0;
@@ -1625,6 +1629,30 @@ header p {
     padding: 24px 16px 48px;
   }
 
+  /* Responsive Page Header */
+  header:not(.mobile-header),
+  .shell-content header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 24px;
+    width: 100%;
+  }
+
+  header:not(.mobile-header) > div,
+  .shell-content header > div {
+    width: 100%;
+    flex: none;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-start;
+    margin-left: 0;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
   /* Auth Pages on Tablet/Mobile */
   .auth {
     display: flex;
@@ -1660,7 +1688,8 @@ header p {
     padding: 18px 14px 40px;
   }
 
-  header {
+  header:not(.mobile-header),
+  .shell-content header {
     margin-bottom: 20px;
     gap: 12px;
   }

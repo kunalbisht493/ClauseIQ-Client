@@ -61,8 +61,6 @@ export default function Layout() {
         <NavLink to="/" className="brand" onClick={() => setIsMobileMenuOpen(false)}>
           Clause<span>IQ</span>
         </NavLink>
-
-        <div style={{ width: 40 }} />
       </header>
 
       {/* Mobile Drawer Backdrop */}
