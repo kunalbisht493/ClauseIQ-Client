@@ -146,6 +146,9 @@ export default function Layout() {
             Sign out
           </button>
         </div>
+        <div className="sidebar-disclaimer">
+          <small>AI-assisted insights · Not legal advice</small>
+        </div>
       </aside>
 
       <main className="shell-content">
