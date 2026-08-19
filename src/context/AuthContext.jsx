@@ -9,14 +9,18 @@ export function AuthProvider({ children }) {
   );
   const [checkingSession, setCheckingSession] = useState(true);
 
-  const persistUser = (u) => {
+  const persistUser = (u, token) => {
     setUser(u);
     sessionStorage.setItem('clauseiq-user', JSON.stringify(u));
+    if (token) {
+      localStorage.setItem('clauseiq-token', token);
+    }
   };
 
   const clearUser = () => {
     setUser(null);
     sessionStorage.removeItem('clauseiq-user');
+    localStorage.removeItem('clauseiq-token');
   };
 
   useEffect(() => {
@@ -90,7 +94,7 @@ export function AuthProvider({ children }) {
 
   const signIn = async (v) => {
     const r = await auth.login(v);
-    persistUser(r.user);
+    persistUser(r.user, r.token);
     auth.broadcastAuthEvent({ type: 'LOGIN' });
     return r;
   };

@@ -18,7 +18,10 @@ export default function VerifyEmailPage() {
     }
 
     verifyEmail(token)
-      .then(() => loadCurrentUser())
+      .then((res) => {
+        if (res?.token) localStorage.setItem('clauseiq-token', res.token);
+        return loadCurrentUser();
+      })
       .then(() => setStatus('done'))
       .catch((e) => {
         setStatus('error');

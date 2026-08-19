@@ -1,16 +1,22 @@
 import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function AuthCallbackPage() {
   const { loadCurrentUser } = useAuth();
+  const [searchParams] = useSearchParams();
   const [status, setStatus] = useState('loading');
 
   useEffect(() => {
+    const token = searchParams.get('token');
+    if (token) {
+      localStorage.setItem('clauseiq-token', token);
+    }
+
     loadCurrentUser()
       .then(() => setStatus('done'))
       .catch(() => setStatus('error'));
-  }, []);
+  }, [loadCurrentUser, searchParams]);
 
   if (status === 'done') return <Navigate to="/" replace />;
   if (status === 'error') return <Navigate to="/login" replace />;

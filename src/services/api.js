@@ -3,12 +3,14 @@ export const API_URL = rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl}/ap
 
 export async function request(path, options = {}) {
   const isFormData = options.body instanceof FormData;
+  const token = typeof window !== 'undefined' ? localStorage.getItem('clauseiq-token') : null;
 
   const res = await fetch(`${API_URL}${path}`, {
     credentials: 'include',
     ...options,
     headers: {
       ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options.headers,
     },
   });
