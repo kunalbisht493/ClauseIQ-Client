@@ -94,7 +94,7 @@ export default function LoginPage() {
           <div className="alert error">
             <p style={{ margin: 0 }}>{error}</p>
             {error.toLowerCase().includes('verify') && form.email && (
-              <div className="resend-box">
+              <div className="resend-box" style={{ marginTop: 8 }}>
                 <button
                   type="button"
                   className="link"
@@ -108,7 +108,24 @@ export default function LoginPage() {
             )}
           </div>
         )}
-        {notice && <p className="alert success">{notice}</p>}
+        {notice && (
+          <div className="alert success">
+            <p style={{ margin: 0 }}>{notice}</p>
+            {form.email && (
+              <div className="resend-box" style={{ marginTop: 8 }}>
+                <button
+                  type="button"
+                  className="link"
+                  style={{ color: '#0d544d', fontWeight: 700, textDecoration: 'underline' }}
+                  disabled={resending}
+                  onClick={handleResendVerification}
+                >
+                  {resending ? 'Sending verification link…' : "Didn't receive it? Resend again"}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
 
         <a href={googleLoginUrl} className="google-btn">
           <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
