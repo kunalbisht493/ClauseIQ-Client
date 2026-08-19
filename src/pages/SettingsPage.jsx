@@ -14,6 +14,7 @@ export default function SettingsPage() {
   const [pwForm, setPwForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [pwError, setPwError] = useState('');
   const [pwNotice, setPwNotice] = useState('');
+  const [pwResetUrl, setPwResetUrl] = useState('');
   const [pwBusy, setPwBusy] = useState(false);
   const [resetEmailSending, setResetEmailSending] = useState(false);
 
@@ -29,9 +30,13 @@ export default function SettingsPage() {
     setResetEmailSending(true);
     setPwError('');
     setPwNotice('');
+    setPwResetUrl('');
     try {
       const res = await forgotPassword(user.email);
       setPwNotice(res.message || `A password reset link has been sent to ${user.email}. Please check your inbox.`);
+      if (res.resetUrl) {
+        setPwResetUrl(res.resetUrl);
+      }
     } catch (err) {
       setPwError(err.message);
     } finally {
@@ -172,10 +177,30 @@ export default function SettingsPage() {
             {pwNotice && (
               <div className="alert success">
                 <p style={{ margin: 0, fontWeight: 600 }}>{pwNotice}</p>
-                {pwNotice.toLowerCase().includes('sent') && (
-                  <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#165b53' }}>
-                    Check Spam folder if not in inbox.
-                  </p>
+                {pwResetUrl ? (
+                  <div style={{ marginTop: 8 }}>
+                    <a
+                      href={pwResetUrl}
+                      style={{
+                        display: 'inline-block',
+                        backgroundColor: '#14796f',
+                        color: '#ffffff',
+                        padding: '6px 14px',
+                        borderRadius: '6px',
+                        fontWeight: 700,
+                        textDecoration: 'none',
+                        fontSize: '12px',
+                      }}
+                    >
+                      Reset password now →
+                    </a>
+                  </div>
+                ) : (
+                  pwNotice.toLowerCase().includes('sent') && (
+                    <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#165b53' }}>
+                      Check Spam folder if not in inbox.
+                    </p>
+                  )
                 )}
               </div>
             )}

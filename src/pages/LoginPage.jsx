@@ -44,8 +44,13 @@ export default function LoginPage() {
         nav('/');
       } else {
         const r = await register(form);
-        setNotice(r.message || 'Verification email sent. Please check your inbox.');
-        setMode('login');
+        if (r.token || r.user?.emailVerified) {
+          await signIn({ email: form.email, password: form.password });
+          nav('/');
+        } else {
+          setNotice(r.message || 'Verification email sent. Please check your inbox.');
+          setMode('login');
+        }
       }
     } catch (e) {
       setError(e.message);

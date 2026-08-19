@@ -5,6 +5,7 @@ import { forgotPassword } from '../services/auth.service';
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [resetUrl, setResetUrl] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -14,9 +15,13 @@ export default function ForgotPasswordPage() {
     setBusy(true);
     setError('');
     setMessage('');
+    setResetUrl('');
     try {
       const result = await forgotPassword(email);
       setMessage(result.message || 'If an account exists for this email, a password-reset link has been sent.');
+      if (result.resetUrl) {
+        setResetUrl(result.resetUrl);
+      }
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -51,9 +56,29 @@ export default function ForgotPasswordPage() {
         {message && (
           <div className="alert success">
             <p style={{ margin: 0, fontWeight: 600 }}>{message}</p>
-            <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#165b53' }}>
-              Check Spam folder if not in inbox.
-            </p>
+            {resetUrl ? (
+              <div style={{ marginTop: 10 }}>
+                <a
+                  href={resetUrl}
+                  style={{
+                    display: 'inline-block',
+                    backgroundColor: '#14796f',
+                    color: '#ffffff',
+                    padding: '8px 16px',
+                    borderRadius: '6px',
+                    fontWeight: 700,
+                    textDecoration: 'none',
+                    fontSize: '13px',
+                  }}
+                >
+                  Reset your password now →
+                </a>
+              </div>
+            ) : (
+              <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#165b53' }}>
+                Check Spam folder if not in inbox.
+              </p>
+            )}
           </div>
         )}
 
