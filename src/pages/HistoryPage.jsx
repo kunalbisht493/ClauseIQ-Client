@@ -52,20 +52,24 @@ export default function HistoryPage() {
       <div className="docs history">
         {docs.map((d) => (
           <Link to={`/documents/${d._id}`} className="doc" key={d._id}>
-            <b>{d.filename}</b>
-            <small>
-              Uploaded {date(d.uploadedAt)} · {Math.ceil(d.size / 1024)} KB
-            </small>
-            <em className={d.status}>{d.status}</em>
-            <button
-              type="button"
-              className="doc-delete"
-              aria-label={`Delete ${d.filename}`}
-              disabled={deletingId === d._id}
-              onClick={(e) => handleDelete(e, d._id, d.filename)}
-            >
-              {deletingId === d._id ? 'Deleting…' : 'Delete'}
-            </button>
+            <div className="doc-info">
+              <b>{d.filename}</b>
+              <small>
+                Uploaded {date(d.uploadedAt)} · {Math.ceil(d.size / 1024)} KB
+              </small>
+            </div>
+            <div className="doc-actions">
+              <em className={d.status}>{d.status}</em>
+              <button
+                type="button"
+                className="doc-delete"
+                aria-label={`Delete ${d.filename}`}
+                disabled={deletingId === d._id}
+                onClick={(e) => handleDelete(e, d._id, d.filename)}
+              >
+                {deletingId === d._id ? 'Deleting…' : 'Delete'}
+              </button>
+            </div>
           </Link>
         ))}
 

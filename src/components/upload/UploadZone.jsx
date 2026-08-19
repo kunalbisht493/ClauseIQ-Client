@@ -18,7 +18,7 @@ export default function UploadZone({ onUpload, busy }) {
         e.dataTransfer.files[0] && onUpload(e.dataTransfer.files[0]);
       }}
     >
-      <div>↑</div>
+      <div className="upload-icon">↑</div>
       <h3>{busy ? 'Analysing your document…' : 'Upload a legal document'}</h3>
       <p>Drag a PDF here, or choose one from your computer.</p>
       <button

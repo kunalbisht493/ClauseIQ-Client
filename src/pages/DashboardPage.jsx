@@ -79,11 +79,15 @@ export default function DashboardPage() {
           <div className="docs">
             {docs.slice(0, 4).map((d) => (
               <Link to={`/documents/${d._id}`} className="doc" key={d._id}>
-                <b>{d.filename}</b>
-                <small>
-                  {date(d.uploadedAt)} · {Math.ceil(d.size / 1024)} KB
-                </small>
-                <em className={d.status}>{d.status}</em>
+                <div className="doc-info">
+                  <b>{d.filename}</b>
+                  <small>
+                    {date(d.uploadedAt)} · {Math.ceil(d.size / 1024)} KB
+                  </small>
+                </div>
+                <div className="doc-actions">
+                  <em className={d.status}>{d.status}</em>
+                </div>
               </Link>
             ))}
           </div>
