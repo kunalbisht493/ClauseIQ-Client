@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { googleLoginUrl } from '../services/auth.service';
+import { googleLoginUrl, resendVerification } from '../services/auth.service';
+import PasswordInput, { validatePasswordStrength } from '../components/common/PasswordInput';
 
 export default function LoginPage() {
   const { user, checkingSession, signIn, register } = useAuth();
@@ -12,6 +13,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
+  const [resending, setResending] = useState(false);
 
   useEffect(() => {
     if (sessionStorage.getItem('clauseiq-session-expired')) {
@@ -27,19 +29,42 @@ export default function LoginPage() {
     e.preventDefault();
     setBusy(true);
     setError('');
+
+    if (mode === 'register') {
+      const strength = validatePasswordStrength(form.password);
+      if (!strength.isValid) {
+        setBusy(false);
+        setError('Please enter a strong password with at least 8 characters, an uppercase letter, a lowercase letter, a number, and a special symbol.');
+        return;
+      }
+    }
     try {
       if (mode === 'login') {
         await signIn({ email: form.email, password: form.password });
         nav('/');
       } else {
         const r = await register(form);
-        setNotice(r.message);
+        setNotice(r.message || 'Verification email sent. Please check your inbox.');
         setMode('login');
       }
     } catch (e) {
       setError(e.message);
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function handleResendVerification() {
+    if (!form.email) return;
+    setResending(true);
+    setError('');
+    try {
+      const res = await resendVerification(form.email);
+      setNotice(res.message || 'Verification email sent. Please check your inbox.');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setResending(false);
     }
   }
 
@@ -65,7 +90,24 @@ export default function LoginPage() {
         <p className="eyebrow">WELCOME</p>
         <h2>{mode === 'login' ? 'Sign in to your workspace' : 'Create your workspace'}</h2>
 
-        {error && <p className="alert error">{error}</p>}
+        {error && (
+          <div className="alert error">
+            <p style={{ margin: 0 }}>{error}</p>
+            {error.toLowerCase().includes('verify') && form.email && (
+              <div className="resend-box">
+                <button
+                  type="button"
+                  className="link"
+                  style={{ color: '#8a2b20', fontWeight: 700, textDecoration: 'underline' }}
+                  disabled={resending}
+                  onClick={handleResendVerification}
+                >
+                  {resending ? 'Sending verification link…' : 'Resend verification email'}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
         {notice && <p className="alert success">{notice}</p>}
 
         <a href={googleLoginUrl} className="google-btn">
@@ -104,14 +146,24 @@ export default function LoginPage() {
           </label>
           <label>
             Password
-            <input
+            <PasswordInput
               required
-              minLength="8"
-              type="password"
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
+              placeholder={mode === 'register' ? 'Choose a strong password' : 'Enter your password'}
+              showRequirements={mode === 'register'}
+              autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
             />
           </label>
+
+          {mode === 'login' && (
+            <div className="auth-sublinks">
+              <Link to="/forgot-password" className="link" style={{ fontSize: '13px' }}>
+                Forgot password?
+              </Link>
+            </div>
+          )}
+
           <button className="primary wide" disabled={busy}>
             {busy ? 'Please wait…' : mode === 'login' ? 'Sign in' : 'Create account'}
           </button>
@@ -121,7 +173,10 @@ export default function LoginPage() {
           {mode === 'login' ? 'New to ClauseIQ? ' : 'Already have an account? '}
           <button
             className="link"
-            onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
+            onClick={() => {
+              setMode(mode === 'login' ? 'register' : 'login');
+              setError('');
+            }}
           >
             {mode === 'login' ? 'Create an account' : 'Sign in'}
           </button>
