@@ -1,0 +1,12 @@
+# ClauseIQ
+
+> AI-powered legal contract analysis, risk evaluation, and clause interrogation.
+
+## Overview
+ClauseIQ is a web platform for analyzing legal PDF contracts, identifying potential commercial and legal risks, and providing cite-backed answers to clause-specific inquiries.
+
+## Key Capabilities
+- In-memory PDF contract text extraction with OCR fallback
+- Automated clause extraction and risk categorization (High, Medium, Low)
+- Two-stage RAG conversational question answering with exact clause citations
+- Secure authentication with Google OAuth 2.0 and email verification
