@@ -19,7 +19,7 @@ export default function UploadZone({ onUpload, busy }) {
       }}
     >
       <div className="upload-icon">↑</div>
-      <h3>{busy ? 'Analysing your document…' : 'Upload a legal document'}</h3>
+      <h2>{busy ? 'Analysing your document…' : 'Upload a legal document'}</h2>
       <p>Drag a PDF here, or choose one from your computer.</p>
       <button
         className="primary"

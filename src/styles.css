@@ -556,8 +556,12 @@ header:not(.mobile-header) p,
   font-weight: 700;
 }
 
+.upload h2,
 .upload h3 {
   margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text-main);
 }
 
 .upload p {
@@ -596,7 +600,7 @@ header:not(.mobile-header) p,
 .stats b {
   font-size: clamp(26px, 4vw, 34px);
   font-weight: 700;
-  color: var(--color-brand-accent);
+  color: var(--color-brand-dark);
   line-height: 1.1;
 }
 
