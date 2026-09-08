@@ -7,10 +7,26 @@
     <meta name="description" content="AI-powered legal contract analysis, risk evaluation, and clause interrogation. Upload agreements, uncover hidden risks, and get clear answers grounded in your document." />
     <meta name="theme-color" content="#14796f" />
     
-    <!-- Preconnect to Google Fonts to eliminate render-blocking delay -->
+    <!-- Non-render-blocking font loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Playfair+Display:ital,wght@0,600..800;1,600..800&display=swap" />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Playfair+Display:ital,wght@0,600..800;1,600..800&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Playfair+Display:ital,wght@0,600..800;1,600..800&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Playfair+Display:ital,wght@0,600..800;1,600..800&display=swap"
+      />
+    </noscript>
   </head>
   <body>
     <div id="root"></div>
