@@ -3,6 +3,10 @@ export const API_URL = rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl}/ap
 
 export async function request(path, options = {}, retries = 2) {
   const isFormData = options.body instanceof FormData;
+  // Only idempotent requests are safe to repeat. Retrying a POST (e.g. an upload that the
+  // server is still processing) can create duplicates and double the AI cost.
+  const method = String(options.method || 'GET').toUpperCase();
+  if (method !== 'GET' && method !== 'HEAD') retries = 0;
   const token = typeof window !== 'undefined' ? localStorage.getItem('clauseiq-token') : null;
 
   try {

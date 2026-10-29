@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { askQuestion, getDocument } from '../services/document.service';
+import { askQuestionStream, getDocument } from '../services/document.service';
 import RiskBadge from '../components/analysis/RiskBadge';
 import ChatBox from '../components/chat/ChatBox';
 
@@ -78,7 +78,7 @@ function QaHistoryItem({ item, isLatest = false, initialCollapsed = false }) {
         </button>
       </div>
 
-      <p className="qa-answer">{item.answer}</p>
+      <p className="qa-answer">{item.answer || (item.pending ? 'Reading the contract…' : '')}</p>
 
       {riskFlags.length > 0 && (
         <div className="qa-risks">
@@ -126,6 +126,7 @@ export default function AnalysisPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPreviousHistory, setShowPreviousHistory] = useState(true);
+  const [pending, setPending] = useState(null); // the answer currently streaming in
 
   useEffect(() => {
     let timerId;
@@ -135,8 +136,16 @@ export default function AnalysisPage() {
       try {
         const res = await getDocument(id);
         if (!isSubscribed) return;
-        setData(res);
-        if (res.document?.status === 'processing' || res.document?.status === 'uploaded') {
+        // A question asked while risk analysis is still running is saved by the server a moment
+        // after it answers. Keep the longer history so a poll never makes an answer vanish.
+        setData((prev) => {
+          const serverHistory = res.analysis?.qaHistory || [];
+          const localHistory = prev?.analysis?.qaHistory || [];
+          const qaHistory = localHistory.length > serverHistory.length ? localHistory : serverHistory;
+          if (!qaHistory.length) return res;
+          return { ...res, analysis: { ...(res.analysis || {}), qaHistory } };
+        });
+        if (['processing', 'uploaded', 'indexed'].includes(res.document?.status)) {
           timerId = setTimeout(loadData, 2500);
         }
       } catch (e) {
@@ -156,12 +165,20 @@ export default function AnalysisPage() {
   async function ask(q) {
     setLoading(true);
     setError('');
+    setPending({ question: q, answer: '', sources: [], riskFlags: [], pending: true });
     try {
-      const r = await askQuestion(id, q);
-      setData((d) => ({ ...d, analysis: r.analysis }));
+      const entry = await askQuestionStream(id, q, {
+        onSources: (sources) => setPending((p) => p && { ...p, sources }),
+        onToken: (text) => setPending((p) => p && { ...p, answer: p.answer + text }),
+      });
+      setData((d) => ({
+        ...d,
+        analysis: { ...(d.analysis || {}), qaHistory: [...(d.analysis?.qaHistory || []), entry] },
+      }));
     } catch (e) {
       setError(e.message);
     } finally {
+      setPending(null);
       setLoading(false);
     }
   }
@@ -170,7 +187,8 @@ export default function AnalysisPage() {
   if (!data) return <div className="empty">Loading document analysis…</div>;
 
   const { document, analysis = {} } = data;
-  const qaHistory = analysis?.qaHistory || [];
+  const analyzing = document.status === 'indexed'; // Q&A works; risk analysis still running
+  const qaHistory = [...(analysis?.qaHistory || []), ...(pending ? [pending] : [])];
   const latestItem = qaHistory.length ? qaHistory[qaHistory.length - 1] : null;
   const previousItems = qaHistory.length > 1 ? qaHistory.slice(0, qaHistory.length - 1).reverse() : [];
   const hasLegacyQa = !qaHistory.length && analysis?.question && analysis?.answer;
@@ -191,7 +209,7 @@ export default function AnalysisPage() {
           </p>
         </div>
         <div className="header-actions">
-          {analysis && (
+          {document.status === 'ready' && analysis && (
             <RiskBadge score={analysis.riskScore} level={analysis.riskLevel} />
           )}
           <Link className="secondary" to="/">
@@ -206,24 +224,35 @@ export default function AnalysisPage() {
         <div className="alert error">
           Analysis failed: {document.error || 'Please try uploading again.'}
         </div>
-      ) : document.status !== 'ready' ? (
+      ) : document.status === 'processing' || document.status === 'uploaded' ? (
         <div className="panel processing-card">
           <div className="spinner" />
-          <h3>Analyzing and indexing your document…</h3>
+          <h3>Reading your document…</h3>
           <p className="muted">
-            We are extracting clauses, assessing risks, and creating vector embeddings. This page will update automatically once complete.
+            We are extracting the text and preparing it for questions. You will be able to ask questions in a few seconds; the risk review follows.
           </p>
         </div>
       ) : (
         <div className="analysis">
           <section className="panel summary">
             <h2>Plain-language summary</h2>
-            <p>{analysis?.summary || 'Your analysis is being prepared.'}</p>
+            {analyzing ? (
+              <div className="processing-inline" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div className="spinner" style={{ width: 18, height: 18 }} />
+                <p className="muted" style={{ margin: 0 }}>
+                  Reviewing the full contract for risks. You can already ask questions below.
+                </p>
+              </div>
+            ) : (
+              <p>{analysis?.summary || 'Your analysis is being prepared.'}</p>
+            )}
           </section>
 
           <section className="panel">
             <h2>Risk flags</h2>
-            {analysis?.riskClauses?.length ? (
+            {analyzing ? (
+              <p className="muted">Risk flags will appear here in a moment…</p>
+            ) : analysis?.riskClauses?.length ? (
               <div className="risks">
                 {analysis.riskClauses.map((r, i) => (
                   <article key={i}>

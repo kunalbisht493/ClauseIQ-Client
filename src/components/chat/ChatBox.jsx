@@ -6,8 +6,9 @@ export default function ChatBox({ onAsk, loading }) {
   async function submit(event) {
     event.preventDefault();
     if (!question.trim() || loading) return;
-    await onAsk(question);
-    setQuestion('');
+    const asked = question;
+    setQuestion(''); // clear immediately; the answer streams in below
+    await onAsk(asked);
   }
 
   return (
